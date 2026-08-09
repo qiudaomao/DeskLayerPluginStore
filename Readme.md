@@ -71,4 +71,11 @@ category fetches immediately.
 
 ## Writing plugins
 
-See `doc/plugin-guide.md` in the DeskLayer repository.
+**[docs/plugin-guide.md](docs/plugin-guide.md)** is the complete guide: the
+plugin shape, properties, render cadence, canvas and declarative rendering,
+webview mode, timers and networking, the host APIs (`$system`, `shell()`,
+`applescript()`, `ssh()`, `$server`) and their permissions, per-item settings,
+debugging, and a full reference.
+
+Read a plugin in `samples/` alongside it — each one is small and exercises a
+different part of the API.
