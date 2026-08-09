@@ -1,5 +1,7 @@
 {
   "name": "DeskLayer Official",
+  "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/official/catalog.json",
+  "website": "https://github.com/qiudaomao/DeskLayerPluginStore",
   "plugins": [
     {
       "name": "AnalogClock",

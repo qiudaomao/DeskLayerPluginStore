@@ -1,5 +1,7 @@
 {
   "name": "DeskLayer Samples",
+  "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/samples/catalog.json",
+  "website": "https://github.com/qiudaomao/DeskLayerPluginStore",
   "plugins": [
     {
       "name": "Counter",
