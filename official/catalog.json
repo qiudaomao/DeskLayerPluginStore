@@ -33,7 +33,7 @@
       "mirrors": [
         "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/official/SystemMonitor.js"
       ],
-      "version": "1.1.0",
+      "version": "1.2.0",
       "author": "DeskLayer"
     },
     {
@@ -42,6 +42,16 @@
       "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/official/The%20Clock.js",
       "mirrors": [
         "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/official/The%20Clock.js"
+      ],
+      "version": "1.0.0",
+      "author": "DeskLayer"
+    },
+    {
+      "name": "Pinwheel",
+      "description": "A pinwheel that spins with your CPU — the busier the Mac, the faster it turns.",
+      "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/official/Pinwheel.js",
+      "mirrors": [
+        "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/official/Pinwheel.js"
       ],
       "version": "1.0.0",
       "author": "DeskLayer"

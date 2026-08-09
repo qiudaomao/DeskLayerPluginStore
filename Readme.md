@@ -77,5 +77,12 @@ webview mode, timers and networking, the host APIs (`$system`, `shell()`,
 `applescript()`, `ssh()`, `$server`) and their permissions, per-item settings,
 debugging, and a full reference.
 
-Read a plugin in `samples/` alongside it — each one is small and exercises a
+**[docs/plugin.d.ts](docs/plugin.d.ts)** declares the same API as TypeScript,
+so an editor can complete it and catch mistakes:
+
+```js
+/// <reference path="./plugin.d.ts" />
+```
+
+Read a plugin in `samples/` alongside both — each one is small and exercises a
 different part of the API.

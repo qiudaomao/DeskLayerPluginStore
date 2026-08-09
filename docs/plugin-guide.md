@@ -24,6 +24,23 @@ guide covers everything you can do.
 
 ---
 
+## Editor support
+
+[`plugin.d.ts`](plugin.d.ts) declares every API in this guide as TypeScript.
+Drop it next to your plugin and add one line at the top of the file:
+
+```js
+/// <reference path="./plugin.d.ts" />
+```
+
+VS Code then completes `ctx`, the view builders, and `plugin.export`, and
+flags the browser and Node habits this runtime doesn't have — no `document`,
+no `require`, no `fetch` options it doesn't implement. Check one plugin at a
+time; TypeScript shares a single global scope across files, while each plugin
+really runs in its own.
+
+---
+
 ## Quick start
 
 Create `~/Library/Application Support/DeskLayer/Plugins/Hello.js`:
