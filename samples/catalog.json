@@ -1,12 +1,18 @@
 {
   "name": "DeskLayer Samples",
   "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/samples/catalog.json",
+  "mirrors": [
+    "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/samples/catalog.json"
+  ],
   "website": "https://github.com/qiudaomao/DeskLayerPluginStore",
   "plugins": [
     {
       "name": "Counter",
       "description": "Interactive counter \u2014 buttons, a text field, and tap callbacks. Use as a floating window.",
       "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/samples/Counter.js",
+      "mirrors": [
+        "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/samples/Counter.js"
+      ],
       "version": "1.0.0",
       "author": "DeskLayer"
     },
@@ -14,6 +20,9 @@
       "name": "FetchDemo",
       "description": "",
       "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/samples/FetchDemo.js",
+      "mirrors": [
+        "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/samples/FetchDemo.js"
+      ],
       "version": "1.0.0",
       "author": "DeskLayer"
     },
@@ -21,6 +30,9 @@
       "name": "HelloCard",
       "description": "",
       "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/samples/HelloCard.js",
+      "mirrors": [
+        "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/samples/HelloCard.js"
+      ],
       "version": "1.0.0",
       "author": "DeskLayer"
     },
@@ -28,6 +40,9 @@
       "name": "HookBoard",
       "description": "",
       "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/samples/HookBoard.js",
+      "mirrors": [
+        "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/samples/HookBoard.js"
+      ],
       "version": "1.0.0",
       "author": "DeskLayer"
     },
@@ -35,6 +50,9 @@
       "name": "Particles",
       "description": "",
       "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/samples/Particles.js",
+      "mirrors": [
+        "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/samples/Particles.js"
+      ],
       "version": "1.0.0",
       "author": "DeskLayer"
     },
@@ -42,6 +60,9 @@
       "name": "WeatherCard",
       "description": "",
       "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/samples/WeatherCard.js",
+      "mirrors": [
+        "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/samples/WeatherCard.js"
+      ],
       "version": "1.0.0",
       "author": "DeskLayer"
     },
@@ -49,6 +70,9 @@
       "name": "WebPage",
       "description": "Shows a web page. Edit URL, scroll offset, and zoom in the inspector.",
       "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/samples/WebPage.js",
+      "mirrors": [
+        "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/samples/WebPage.js"
+      ],
       "version": "1.0.0",
       "author": "DeskLayer"
     },
@@ -56,6 +80,9 @@
       "name": "WebSocketDemo",
       "description": "",
       "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/samples/WebSocketDemo.js",
+      "mirrors": [
+        "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/samples/WebSocketDemo.js"
+      ],
       "version": "1.0.0",
       "author": "DeskLayer"
     }

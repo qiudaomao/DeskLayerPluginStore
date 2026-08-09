@@ -1,4 +1,7 @@
 {
   "version": "1.0.0",
-  "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/official/The%20Clock.js"
+  "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/official/The%20Clock.js",
+  "mirrors": [
+    "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/official/The%20Clock.js"
+  ]
 }

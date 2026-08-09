@@ -1,4 +1,7 @@
 {
   "version": "1.0.0",
-  "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/samples/HookBoard.js"
+  "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/samples/HookBoard.js",
+  "mirrors": [
+    "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/samples/HookBoard.js"
+  ]
 }

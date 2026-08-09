@@ -1,12 +1,18 @@
 {
   "name": "DeskLayer Official",
   "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/official/catalog.json",
+  "mirrors": [
+    "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/official/catalog.json"
+  ],
   "website": "https://github.com/qiudaomao/DeskLayerPluginStore",
   "plugins": [
     {
       "name": "AnalogClock",
       "description": "An analog clock with a custom face color and label.",
       "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/official/AnalogClock.js",
+      "mirrors": [
+        "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/official/AnalogClock.js"
+      ],
       "version": "1.0.0",
       "author": "DeskLayer"
     },
@@ -14,6 +20,9 @@
       "name": "RemoteMonitor",
       "description": "Remote host dashboard over SSH: load and memory rings, network and disk I/O rates.",
       "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/official/RemoteMonitor.js",
+      "mirrors": [
+        "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/official/RemoteMonitor.js"
+      ],
       "version": "1.1.0",
       "author": "DeskLayer"
     },
@@ -21,6 +30,9 @@
       "name": "SystemMonitor",
       "description": "Live CPU, memory, disk, and network gauges.",
       "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/official/SystemMonitor.js",
+      "mirrors": [
+        "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/official/SystemMonitor.js"
+      ],
       "version": "1.1.0",
       "author": "DeskLayer"
     },
@@ -28,6 +40,9 @@
       "name": "The Clock",
       "description": "A minimal graphite dial with no hands: the hour numeral lights up, the minute ring fills segment by segment, the current second blinks, and the sun or moon marks the half of the day.",
       "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/official/The%20Clock.js",
+      "mirrors": [
+        "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/official/The%20Clock.js"
+      ],
       "version": "1.0.0",
       "author": "DeskLayer"
     }

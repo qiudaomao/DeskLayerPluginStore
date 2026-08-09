@@ -39,6 +39,25 @@ samples/             examples to read and copy
 
 `preview` is optional and shown in the inspector before installing.
 
+## Mirrors
+
+`raw.githubusercontent.com` is unreachable on some networks, so both the
+catalog and each plugin can list `mirrors`. DeskLayer tries the primary URL
+first, then each mirror in order, and remembers whichever one answered so the
+next fetch starts there instead of paying for the timeout again.
+
+```json
+{
+  "url": "https://raw.githubusercontent.com/.../official/catalog.json",
+  "mirrors": ["https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/official/catalog.json"]
+}
+```
+
+These catalogs mirror through jsDelivr, which serves this same repository. The
+mirrors a catalog declares are remembered by the app, so a store only has to be
+reachable once for its fallbacks to be learned; the two built-in stores also
+ship their mirror in the app, so even the very first fetch has a fallback.
+
 ## Updating a plugin
 
 Bump `version` in the plugin's `plugin.export`, then regenerate the catalog and
