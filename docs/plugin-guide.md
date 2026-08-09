@@ -293,39 +293,112 @@ render = () => view([
 plugin.export = { properties, render };
 ```
 
+`render` must **return** the tree. An arrow function with a concise body
+(`render = () => view([...])`) does that for you; one with a block body needs
+the `return` spelled out:
+
+```js
+render = () => {
+    const rows = data.map(d => Text(d.name));
+    return view([VStack(rows)]);   // without `return`, nothing is drawn
+};
+```
+
+A missing `return` renders an empty item with no error — the tree simply
+never arrives.
+
 ### Elements
 
-Layout & text: `view([...])` (root), `VStack`, `HStack`, `ZStack`,
-`Text("...")`, `Spacer()`. Aliases: `Section` = `VStack`, `Paragraph` = `Text`.
+Every element is a plain JS object; nothing here is real SwiftUI syntax, so
+only what this table lists exists. Anything else renders a warning badge
+rather than crashing.
 
-`Image(name)` — an SF Symbol name, a file in the plugin folder, **or an
-`http(s)`/`file` URL** (loaded async).
+| Builder | Renders as | Notes |
+| --- | --- | --- |
+| `view([...])` | root `ZStack` | The tree `render()` returns. |
+| `VStack([...])` | `VStack` | Vertical. `.spacing(pt)`. Alias: `Section`. |
+| `HStack([...])` | `HStack` | Horizontal. `.spacing(pt)`. |
+| `ZStack([...])` | `ZStack` | Overlay, later children on top. |
+| `Text("…")` | `Text` | Alias: `Paragraph`. |
+| `Image(name)` | `Image` / `AsyncImage` | SF Symbol name, or an `http(s)`/`file` URL loaded asynchronously (spinner while loading, a placeholder symbol on failure). |
+| `Spacer()` | `Spacer` | Pushes siblings apart. |
+| `Button(label, fn?)` | `Button` (borderless) | Or `Button(label).onTap(fn)`. |
+| `TextField(place, fn?)` | text field | `.value(str)` seeds the text; `fn` gets `{ text }`. |
+| `Rect()` | `Rectangle` | Colour it with `.background(css)`, size with `.frame(w, h)`. |
+| `Ring(to)` / `Ring(from, to)` | trimmed `Circle` | Donut gauge, 0…1, clockwise from 12 o'clock. |
+| `Spinner()` | `ProgressView` | Indeterminate, small. |
+| `ProgressBar(value)` | `ProgressView(value:)` | Determinate, 0…1. |
+| `Video(url)` | `AVPlayer` view | `.loop(true)`, `.muted(false)`. |
 
-`Spinner()` — indeterminate activity indicator.
-`ProgressBar(value)` — determinate system bar, `value` 0…1.
-`Rect()` — a plain rectangle; size with `.frame(w, h)` and color with
-`.background(css)`. Use it to draw your own bars, rules, and dividers when you
-want exact colors (see the `SystemMonitor` sample). Pass `null` for a dimension
-to let it flex: `Rect().frame(null, 1)` is a full-width rule.
-`Ring(to)` / `Ring(from, to)` — donut gauge, fractions 0…1, drawn clockwise
-from 12 o'clock. `.lineWidth(pt)`, `.ringColor(css)`, `.trackColor(css)`.
-Stack several `Ring(from, to)` arcs in a `ZStack` to build a **segmented**
-ring entirely in JS (the `RemoteMonitor` memory ring shows used / cached /
-free that way).
-`Video(url)` — plays a video; `.loop(true)`, `.muted(false)`.
+A single child may be passed without an array: `VStack(Text("hi"))`.
 
-Interactive (see below): `Button(label, handler?)`, `TextField(placeholder,
-onChange?)`.
+`Rect()` is the primitive for anything you want exact colours on — bars,
+rules, dividers. Pass `null` for a dimension to let it flex:
+`Rect().frame(null, 1).background("#FFFFFF22")` is a full-width hairline.
+
+Stacking `Ring(from, to)` arcs in a `ZStack` builds a **segmented** ring
+entirely in JS — the `RemoteMonitor` memory ring draws used / cached / free
+that way.
 
 ### Modifiers (chainable)
 
-`.textColor(css)` / `.foregroundColor(css)`, `.fontSize(pt)`, `.bold()`,
-`.padding(pt)`, `.background(css)`, `.cornerRadius(pt)`, `.opacity(0–1)`,
-`.spacing(pt)` (on stacks), `.lineLimit(n)`,
-`.frame(w, h)` or `.frame(w, h, "leading"|"center"|"trailing")`.
+Modifiers apply in the order you chain them, exactly like SwiftUI: the
+result of `.padding(8).background("black")` differs from
+`.background("black").padding(8)`.
+
+| Modifier | Applies to | Effect |
+| --- | --- | --- |
+| `.textColor(css)` | any | Foreground colour. Alias: `.foregroundColor(css)`. |
+| `.fontSize(pt)` | any | System font at that size. Alias: `.font(pt)`. |
+| `.bold()` | any | Bold weight. |
+| `.padding(pt)` | any | Inset on all edges; `.padding()` uses the system default. |
+| `.background(css)` | any | Fills behind the element. |
+| `.cornerRadius(pt)` | any | Clips to a rounded rectangle. |
+| `.frame(w, h)` | any | Fixed size. `null` for either axis leaves it flexible. |
+| `.frame(w, h, align)` | any | `align` is `"leading"`, `"center"` (default) or `"trailing"`. |
+| `.opacity(0–1)` | any | Transparency. |
+| `.lineLimit(n)` | text | Maximum lines before truncation. |
+| `.spacing(pt)` | stacks | Gap between children. |
+| `.onTapGesture(fn)` | any | `fn` receives `{ x, y }` in local points. |
+| `.onTap(fn)` | `Button` | Click handler. |
+| `.onChange(fn)` | `TextField` | `fn` receives `{ text }`. |
+| `.value(str)` | `TextField` | Initial / controlled text. |
+| `.lineWidth(pt)` | `Ring` | Stroke thickness (default 8). |
+| `.ringColor(css)` | `Ring` | Arc colour (default green). |
+| `.trackColor(css)` | `Ring` | Unfilled remainder; omit for none. |
+| `.loop(bool)` | `Video` | Repeat on finish. |
+| `.muted(bool)` | `Video` | Muted by default; pass `false` for sound. |
+
+Any `css` value is a CSS colour string: `"#RGB"`, `"#RRGGBB"`,
+`"#RRGGBBAA"`, `"rgb(…)"`, `"rgba(…)"`, or a named colour like `"white"`.
 
 Fixed-width frames with an alignment are how you build aligned columns —
 give each row's label, value, and bar the same widths and the rows line up.
+
+**What isn't here.** There is no `List`, `Grid`, `ScrollView`, `Toggle`,
+`Slider`, `Picker`, `Divider`, `Shape`, `.overlay`, `.shadow`, `.border`,
+`.rotationEffect`, or animation modifier — build what you need out of
+stacks, `Rect()`, and `.frame()`. If you want something genuinely
+unavailable here, canvas mode gives you arbitrary drawing.
+
+### Sizing and placement
+
+An item is placed by its **top-left corner**. Content is laid out top-leading
+inside the item's frame, so a tree that grows taller extends downward and the
+corner you positioned stays put.
+
+By default the item keeps the size you gave it in the inspector. Declare
+`autoSize` to let the content drive it instead:
+
+```js
+plugin.export = { width: 200, height: 60, autoSize: "height", properties, render };
+```
+
+`"height"` suits stacking content (a list of servers), `"width"` the
+opposite, `"both"` for fully content-driven items. Only the axes you name
+follow the content — the others keep the user's size, so a manual resize is
+never undone on the next render. `minWidth` / `maxWidth` / `minHeight` /
+`maxHeight` still bound the result.
 
 ### Interactivity (floating windows only)
 

@@ -5,23 +5,30 @@ let properties = [
 
 const LABEL_W = 54;   // aligned label column
 const PCT_W = 38;     // aligned percentage column
-const BAR_W = 66;     // aligned bar column
+const DETAIL_W = 66;  // aligned detail column; the bar absorbs the rest
+const BAR_SEGS = 40;  // fill resolution: 1/40 = 2.5%
 let lastNet = null;
 
 // Bar drawn from Rects so it matches the accent color exactly (and
 // renders identically on the wallpaper, in widgets, and in snapshots).
+// The runtime has no proportional frames, so this leans on SwiftUI's
+// equal-split rule: an HStack of equally-flexible cells divides whatever
+// width the row offers, and coloring the first round(fraction*N) cells
+// makes a bar that grows and shrinks with the item. The track is one
+// flexible Rect underneath; spacing(-1) overlaps neighbour cells so
+// antialiasing can't draw seams between them.
 function bar(fraction, accent) {
-    const filled = Math.max(2, Math.min(BAR_W, BAR_W * fraction));
+    const filled = Math.min(BAR_SEGS, Math.max(1, Math.round(fraction * BAR_SEGS)));
+    const cells = [];
+    for (let i = 0; i < BAR_SEGS; i++) {
+        cells.push(i < filled
+            ? Rect().frame(null, 5).background(accent)
+            : Rect().frame(null, 5));
+    }
     return ZStack([
-        HStack([
-            Rect().frame(BAR_W, 5).background('#FFFFFF26').cornerRadius(2.5),
-            Spacer()
-        ]),
-        HStack([
-            Rect().frame(filled, 5).background(accent).cornerRadius(2.5),
-            Spacer()
-        ])
-    ]).frame(BAR_W, 5, 'leading');
+        Rect().frame(null, 5).background('#FFFFFF26'),
+        HStack(cells).spacing(-1)
+    ]).cornerRadius(2.5);
 }
 
 // Compact: 21.1G rather than "21.1 GB", so rows never wrap.
@@ -32,15 +39,16 @@ function fmt(n) {
     return (n >= 100 ? n.toFixed(0) : n.toFixed(1)) + u[i];
 }
 
-// label | percent | bar | detail — every column fixed so rows line up.
+// label | percent | bar | detail — every column fixed except the bar,
+// which soaks up the remaining width, so rows stay gridded at any size.
 function metric(label, fraction, detail, accent) {
     return HStack([
         Text(label).fontSize(11).textColor('#FFFFFF99').frame(LABEL_W, 14, 'leading'),
         Text(Math.round(fraction * 100) + '%').fontSize(12).bold()
             .textColor(accent).frame(PCT_W, 14, 'trailing'),
         bar(fraction, accent),
-        Text(detail).fontSize(10).textColor('#FFFFFF99').lineLimit(1),
-        Spacer()
+        Text(detail).fontSize(10).textColor('#FFFFFF99').lineLimit(1)
+            .frame(DETAIL_W, 14, 'leading')
     ]).spacing(8);
 }
 
@@ -83,7 +91,7 @@ render = () => {
 };
 
 plugin.export = {
-    version: "1.1.0",
+    version: "1.2.0",
     author: "DeskLayer",
     description: "Live CPU, memory, disk, and network gauges.",
     width: 320, height: 170,
