@@ -1,1 +1,55 @@
-# The Plugin Store for DeskLayer
+# DeskLayer Plugin Store
+
+Plugin catalogs for [DeskLayer](https://github.com/qiudaomao/DeskLayer). The app
+ships with no plugins; you add a store and install from it.
+
+| Store | Catalog URL |
+| --- | --- |
+| Official | `https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/official/catalog.json` |
+| Samples | `https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/samples/catalog.json` |
+
+Both are offered by name in DeskLayer's ＋ menu, so you normally don't need to
+paste a URL.
+
+## Layout
+
+```
+official/            plugins the project maintains
+  catalog.json       the store's index
+  AnalogClock.js     a plugin
+  AnalogClock.json   its update manifest: { version, url }
+samples/             examples to read and copy
+```
+
+`catalog.json` is what a store serves:
+
+```json
+{
+  "name": "DeskLayer Official",
+  "plugins": [
+    { "name": "AnalogClock",
+      "description": "An analog clock with a custom face color and label.",
+      "preview": "https://…/analogclock.png",
+      "url": "https://…/official/AnalogClock.js",
+      "version": "1.0.0",
+      "author": "DeskLayer" }
+  ]
+}
+```
+
+`preview` is optional and shown in the inspector before installing.
+
+## Updating a plugin
+
+Bump `version` in the plugin's `plugin.export`, then regenerate the catalog and
+the sibling `<Name>.json` manifest so both carry the new version. DeskLayer
+checks the manifest first (a few hundred bytes) and only downloads the `.js`
+when it is actually newer; a store with no manifest still works, since the app
+falls back to reading the version out of the JavaScript.
+
+Catalogs are cached by the app for 24 hours. The Refresh button on a store
+category fetches immediately.
+
+## Writing plugins
+
+See `doc/plugin-guide.md` in the DeskLayer repository.
