@@ -48,10 +48,15 @@ function render(ctx) {
     const cx = w / 2, cy = avail / 2;
 
     // Each blade is a "D" lying on its spoke: a straight edge along the
-    // x-axis and a circular arc from the hub to the tip bulging 22.5°
-    // to one side (center (R/2, R/2), radius R/√2 passes through both
-    // endpoints). Same chirality all around reads as a pinwheel, and
-    // the span stays under the 30° spacing even at 12 blades.
+    // x-axis and a circular arc from hub to tip through center (R/2, m).
+    // The tangent-chord angle alpha sets how fat the blade is (bulge =
+    // alpha/2); tying it to the spacing keeps blades at 3/4 of their
+    // sector with a 1/4 gap at any count, capped at 75° so few-bladed
+    // wheels stay pinwheel-shaped. Same chirality all around.
+    const spacing = 2 * Math.PI / blades;
+    const alpha = Math.min(1.31, 1.5 * spacing);
+    const m = R / (2 * Math.tan(alpha));
+    const arcR = Math.sqrt(R * R / 4 + m * m);
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(angle);
@@ -59,10 +64,10 @@ function render(ctx) {
         ctx.fillStyle = palette[i % palette.length];
         ctx.beginPath();
         ctx.moveTo(0, 0);
-        ctx.arc(R / 2, R / 2, R * Math.SQRT1_2, -Math.PI * 0.75, -Math.PI * 0.25, false);
+        ctx.arc(R / 2, m, arcR, Math.atan2(-m, -R / 2), Math.atan2(-m, R / 2), false);
         ctx.closePath();
         ctx.fill();
-        ctx.rotate(2 * Math.PI / blades);
+        ctx.rotate(spacing);
     }
     ctx.restore();
 
@@ -86,7 +91,7 @@ function render(ctx) {
 }
 
 plugin.export = {
-    version: "1.0.0",
+    version: "1.1.0",
     author: "DeskLayer",
     description: "A pinwheel that spins with your CPU — the busier the Mac, the faster it turns.",
     width: 240, height: 260,
