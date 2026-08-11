@@ -18,12 +18,12 @@
     },
     {
       "name": "RemoteMonitor",
-      "description": "Remote host dashboard over SSH: load and memory rings, network and disk I/O rates.",
+      "description": "Remote host dashboard over SSH: 1/5/15-minute load rings, memory ring, network and disk I/O rates.",
       "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/official/RemoteMonitor.js",
       "mirrors": [
         "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/official/RemoteMonitor.js"
       ],
-      "version": "1.1.0",
+      "version": "1.2.0",
       "author": "DeskLayer"
     },
     {
@@ -48,7 +48,7 @@
     },
     {
       "name": "Pinwheel",
-      "description": "A pinwheel that spins with your CPU — the busier the Mac, the faster it turns.",
+      "description": "A pinwheel that spins with your CPU \u2014 the busier the Mac, the faster it turns.",
       "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/official/Pinwheel.js",
       "mirrors": [
         "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/official/Pinwheel.js"

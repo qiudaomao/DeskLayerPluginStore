@@ -17,14 +17,14 @@ const servers = {};
 const PROBE = [
     'sh', '-c',
     'if [ -r /proc/loadavg ]; then ' +
-        'echo "L $(cut -d\" \" -f1 /proc/loadavg) $(nproc)"; ' +
+        'echo "L $(cut -d\" \" -f1-3 /proc/loadavg) $(nproc)"; ' +
         // M used total cached free
         'free -k | awk \'/Mem:/{printf "M %.0f %.0f %.0f %.0f\\n", $3, $2, $6, $4}\'; ' +
         'echo "T $(cat /sys/class/thermal/thermal_zone*/temp 2>/dev/null | head -1 || echo 0)"; ' +
         'awk \'$1 ~ /^(eth|ens|enp|eno|wl)/ {gsub(":"," ");rx+=$2;tx+=$10} END{printf "N %.0f %.0f\\n", rx, tx}\' /proc/net/dev; ' +
         'awk \'$3 ~ /^(sd|nvme|vd|hd)/ {r+=$6;w+=$10} END{printf "D %.0f %.0f\\n", r*512, w*512}\' /proc/diskstats; ' +
     'else ' +
-        'echo "L $(sysctl -n vm.loadavg | awk \'{print $2}\') $(sysctl -n hw.ncpu)"; ' +
+        'echo "L $(sysctl -n vm.loadavg | awk \'{print $2, $3, $4}\') $(sysctl -n hw.ncpu)"; ' +
         // active+wired+compressed = used, inactive ≈ cached, free = free
         'vm_stat | awk -v p=$(sysctl -n hw.pagesize) -v t=$(sysctl -n hw.memsize) ' +
             '\'/Pages free/{f=$3} /Pages active/{a=$3} /Pages inactive/{i=$3} ' +
@@ -52,7 +52,12 @@ function refreshOne(name) {
         const s = { time: Date.now() / 1000 };
         r.stdout.trim().split('\n').forEach(line => {
             const f = line.trim().split(/\s+/);
-            if (f[0] === 'L') { s.load = parseFloat(f[1]) || 0; s.cores = parseInt(f[2]) || 1; }
+            if (f[0] === 'L') {
+                s.load = parseFloat(f[1]) || 0;          // 1-minute average
+                s.load5 = parseFloat(f[2]) || 0;         // 5-minute
+                s.load15 = parseFloat(f[3]) || 0;        // 15-minute
+                s.cores = parseInt(f[4]) || 1;
+            }
             else if (f[0] === 'M') {
                 s.memUsed = +f[1] || 0; s.memTotal = +f[2] || 1;
                 s.memCached = +f[3] || 0; s.memFree = +f[4] || 0;
@@ -106,6 +111,34 @@ function gauge(inner, caption) {
     return VStack([ inner.frame(52, 52), Text(caption).fontSize(11).textColor('#FFFFFF99') ]).spacing(4);
 }
 
+// #RGB / #RRGGBB / #RRGGBBAA → the same color at the given alpha, so the
+// nested load rings read as one family without extra properties.
+function withAlpha(hex, alpha) {
+    let h = String(hex).replace('#', '');
+    if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    return '#' + h.slice(0, 6) + alpha;
+}
+
+// Load: three nested rings for the three load averages — 1-minute outside,
+// then 5, then 15 — each scaled per core, so a glance shows both the current
+// spike and whether it is sustained. The inner rings are thinner and dimmer
+// so the 1-minute figure stays the one you read first; each size/width pair
+// leaves a 1pt gap to its neighbour, and the 22pt hole in the middle keeps
+// the group from reading as a solid disc. Only the 1-minute ring carries a
+// track — three nested tracks read as a dartboard. Older hosts that report only the
+// 1-minute average simply leave the inner rings at zero.
+function loadRings(s, accent, warn) {
+    const perCore = v => Math.min(Math.max((v || 0) / (s.cores || 1), 0), 1);
+    const one = perCore(s.load);
+    const ring = (frac, size, width, color, track) => Ring(frac).lineWidth(width)
+        .ringColor(color).trackColor(track).frame(size, size);
+    return ZStack([
+        ring(one, 52, 6, one > 0.8 ? warn : accent, '#FFFFFF14'),
+        ring(perCore(s.load5), 38, 4, withAlpha(accent, 'B3'), '#00000000'),
+        ring(perCore(s.load15), 28, 3, withAlpha(accent, '66'), '#00000000')
+    ]);
+}
+
 // Segmented memory ring from Ring(from, to) arcs:
 //   used = green (accent), cached = gray, free = the dim remainder.
 function memoryRing(s, accent, warn) {
@@ -129,8 +162,6 @@ function serverView(name, e, accent, warn) {
         ]).spacing(3);
     }
     const s = e.stats;
-    const loadFrac = Math.min(s.load / s.cores, 1);
-    const memFrac = s.memUsed / s.memTotal;
 
     return VStack([
         HStack([
@@ -139,13 +170,8 @@ function serverView(name, e, accent, warn) {
             Text(s.temp > 0 ? Math.round(s.temp) + '°C' : '').fontSize(13).textColor('#FFFFFF99')
         ]),
         HStack([
-            // Load: outer ring = 1-min load per core.
-            gauge(ZStack([
-                Ring(loadFrac).lineWidth(6)
-                    .ringColor(loadFrac > 0.8 ? warn : accent).trackColor('#FFFFFF1A'),
-                Ring(Math.min(s.load / (s.cores * 2), 1)).lineWidth(6)
-                    .ringColor(accent).trackColor('#00000000').frame(28, 28)
-            ]), 'load'),
+            // Load: 1 / 5 / 15-minute averages, outermost first.
+            gauge(loadRings(s, accent, warn), 'load'),
             // Memory ring, segmented in JS: used, then cached (light
             // gray), then free (green) — stacked Ring(from, to) arcs.
             gauge(memoryRing(s, accent, warn), 'memory'),
@@ -179,9 +205,9 @@ render = () => {
 };
 
 plugin.export = {
-    version: "1.1.0",
+    version: "1.2.0",
     author: "DeskLayer",
-    description: "Remote host dashboard over SSH: load and memory rings, network and disk I/O rates.",
+    description: "Remote host dashboard over SSH: 1/5/15-minute load rings, memory ring, network and disk I/O rates.",
     width: 430, height: 190,
     // Height follows the number of servers; width stays whatever you set.
     scaleMode: "free",
