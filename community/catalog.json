@@ -1,0 +1,9 @@
+{
+  "name": "DeskLayer Community",
+  "url": "https://raw.githubusercontent.com/qiudaomao/DeskLayerPluginStore/main/community/catalog.json",
+  "mirrors": [
+    "https://cdn.jsdelivr.net/gh/qiudaomao/DeskLayerPluginStore@main/community/catalog.json"
+  ],
+  "website": "https://bbs.byteplayer.app",
+  "plugins": []
+}
